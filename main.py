@@ -4,6 +4,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import requests
+import telegram
 from dotenv import load_dotenv
 
 
@@ -90,13 +91,24 @@ def fetch_nasa_epic_imgset(api_key):
         fetch_nasa_epic_image(api_key, img_name, img_date, i)
 
 
+def fetch_bulk(api_key):
+    fetch_spacex_last_launch()
+    fetch_nasa_apod(api_key)
+    fetch_nasa_epic_imgset(api_key)
+
+def publish_text(bot, channel, message):
+    bot.send_message(chat_id=channel, text=message)
+
+
 def main():
     load_dotenv()
+    telegram_token = os.getenv('TELEGRAM_BOT_TOKEN')
+    channel_id = os.getenv('TELEGRAM_CHANNEL_ID')
     nasa_api_key = os.getenv('NASA_API_KEY')
 
-    fetch_spacex_last_launch()
-    fetch_nasa_apod(nasa_api_key, 10)
-    fetch_nasa_epic_imgset(nasa_api_key)
+
+    bot = telegram.Bot(telegram_token)
+    publish_text(bot, channel_id, 'Hello Channel!')
 
 if __name__ == '__main__':
     main()
