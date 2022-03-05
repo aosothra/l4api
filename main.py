@@ -1,5 +1,6 @@
 import datetime
 import os
+import random
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -11,6 +12,11 @@ from dotenv import load_dotenv
 def get_file_extension(url):
     path = urlsplit(url).path
     return os.path.splitext(path)[1]
+
+
+def get_random_img_name():
+    files = os.listdir('./images/')
+    return random.choice(files)
 
 
 def save_image(url, path, payload={}):
@@ -28,7 +34,7 @@ def save_image(url, path, payload={}):
 
 def fetch_spacex_last_launch():
     spacex_api = 'https://api.spacexdata.com/v5/launches/5eb87d42ffd86e000604b384'
-    base_path = './images/spacex/'
+    base_path = './images/'
 
     response = requests.get(spacex_api)
     response.raise_for_status()
@@ -36,13 +42,13 @@ def fetch_spacex_last_launch():
     img_urls = response.json()['links']['flickr']['original']
 
     for i, link in enumerate(img_urls):
-        img_path = f'{base_path}image{i}.jpeg'
+        img_path = f'{base_path}image_spacex_{i}.jpeg'
         save_image(link, img_path)
 
 
 def fetch_nasa_apod(api_key, img_count=30):
     apod_api = 'https://api.nasa.gov/planetary/apod'
-    base_path = './images/apod/'
+    base_path = './images/'
 
     payload = {
         'count':img_count,
@@ -56,20 +62,20 @@ def fetch_nasa_apod(api_key, img_count=30):
     for i, apod in enumerate(apod_list):
         if apod['media_type']=='image':
             ext = get_file_extension(apod['url'])
-            img_path = f'{base_path}image{i}{ext}'
+            img_path = f'{base_path}image_apod_{i}{ext}'
             save_image(apod['url'], img_path)
 
 
 def fetch_nasa_epic_image(api_key, img_name, date, index):
     formated_date = date.strftime('%Y/%m/%d') 
     url = f'https://api.nasa.gov/EPIC/archive/natural/{formated_date}/png/{img_name}.png'
-    base_path = './images/epic/'
+    base_path = './images/'
 
     payload = {
         'api_key':api_key
     }
 
-    img_path = f'{base_path}image{index}.png'
+    img_path = f'{base_path}image_epic_{index}.png'
     save_image(url, img_path, payload=payload)
 
 
@@ -96,9 +102,16 @@ def fetch_bulk(api_key):
     fetch_nasa_apod(api_key)
     fetch_nasa_epic_imgset(api_key)
 
+
 def publish_text(bot, channel, message):
     bot.send_message(chat_id=channel, text=message)
 
+
+def publish_random_image(bot, channel):
+    base_path = './images/'
+    filename = get_random_img_name()
+
+    bot.send_photo(chat_id=channel, photo=open(f'{base_path}{filename}', 'rb'))
 
 def main():
     load_dotenv()
@@ -106,9 +119,8 @@ def main():
     channel_id = os.getenv('TELEGRAM_CHANNEL_ID')
     nasa_api_key = os.getenv('NASA_API_KEY')
 
-
     bot = telegram.Bot(telegram_token)
-    publish_text(bot, channel_id, 'Hello Channel!')
+    publish_random_image(bot, channel_id)
 
 if __name__ == '__main__':
     main()
