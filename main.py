@@ -1,6 +1,7 @@
 import datetime
 import os
 import random
+import time
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -19,13 +20,19 @@ def get_random_img_name():
     return random.choice(files)
 
 
+def imgset_is_empty():
+    if not Path('./images/').exists():
+        return True
+    elif not os.listdir('./images/'):
+        return True
+    else:
+        return False
+
 def save_image(url, path, payload={}):
     dir = os.path.dirname(path)
 
     response = requests.get(url, params=payload)
-
     response.raise_for_status()
-
 
     Path(dir).mkdir(parents=True, exist_ok=True)
     with open(path, 'wb') as file:
@@ -82,7 +89,6 @@ def fetch_nasa_epic_image(api_key, img_name, date, index):
 def fetch_nasa_epic_imgset(api_key):
     url = 'https://api.nasa.gov/EPIC/api/natural/images'
 
-
     payload = {
         'api_key':api_key
     }
@@ -108,19 +114,27 @@ def publish_text(bot, channel, message):
 
 
 def publish_random_image(bot, channel):
-    base_path = './images/'
-    filename = get_random_img_name()
+    img_path = f'./images/{get_random_img_name()}'
 
-    bot.send_photo(chat_id=channel, photo=open(f'{base_path}{filename}', 'rb'))
+    bot.send_photo(chat_id=channel, photo=open(img_path, 'rb'))
+
+    os.remove(img_path)
+
 
 def main():
     load_dotenv()
+    nasa_api_key = os.getenv('NASA_API_KEY')
     telegram_token = os.getenv('TELEGRAM_BOT_TOKEN')
     channel_id = os.getenv('TELEGRAM_CHANNEL_ID')
-    nasa_api_key = os.getenv('NASA_API_KEY')
-
+    time_delay = int(os.getenv('TIME_DELAY_SECONDS'))
     bot = telegram.Bot(telegram_token)
-    publish_random_image(bot, channel_id)
+
+    while True:
+        if imgset_is_empty():
+            fetch_bulk(nasa_api_key)
+        publish_random_image(bot, channel_id)
+        time.sleep(time_delay)
+
 
 if __name__ == '__main__':
     main()
