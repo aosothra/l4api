@@ -47,14 +47,16 @@ def main():
     nasa_api_key = os.getenv('NASA_API_KEY')
     telegram_token = os.getenv('TELEGRAM_BOT_TOKEN')
     channel_id = os.getenv('TELEGRAM_CHANNEL_ID')
-    time_delay = int(os.getenv('TIME_DELAY_SECONDS'))
+    time_delay = os.getenv('TIME_DELAY_SECONDS')
+    if time_delay is None:
+        time_delay = 86400
     bot = telegram.Bot(telegram_token)
 
     while True:
         if imgset_is_empty():
             fetch_bulk(nasa_api_key)
         publish_random_image(bot, channel_id)
-        time.sleep(time_delay)
+        time.sleep(int(time_delay))
 
 
 if __name__ == '__main__':
