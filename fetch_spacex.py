@@ -3,15 +3,7 @@ from pathlib import Path
 
 import requests
 
-def save_image(url, path):
-    dir = os.path.dirname(path)
-
-    response = requests.get(url)
-    response.raise_for_status()
-
-    Path(dir).mkdir(parents=True, exist_ok=True)
-    with open(path, 'wb') as file:
-        file.write(response.content)
+import save_image
 
 
 def fetch_spacex_last_launch():

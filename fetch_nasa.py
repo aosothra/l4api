@@ -1,25 +1,15 @@
 import datetime
 import os
-from pathlib import Path
 from urllib.parse import urlsplit
 
 import requests
+
+import save_image
 
 
 def get_file_extension(url):
     path = urlsplit(url).path
     return os.path.splitext(path)[1]
-
-
-def save_image(url, path, payload={}):
-    dir = os.path.dirname(path)
-
-    response = requests.get(url, params=payload)
-    response.raise_for_status()
-
-    Path(dir).mkdir(parents=True, exist_ok=True)
-    with open(path, 'wb') as file:
-        file.write(response.content)
 
 
 def fetch_nasa_apod(api_key, img_count=30):
