@@ -4,7 +4,7 @@ from urllib.parse import urlsplit
 
 import requests
 
-from fetch_image import fetch_image
+from fetch_image import fetch_image, save_image
 
 
 def get_file_extension(url):
@@ -14,7 +14,6 @@ def get_file_extension(url):
 
 def fetch_nasa_apod(api_key, img_count=30):
     apod_api = 'https://api.nasa.gov/planetary/apod'
-    base_path = './images/'
 
     payload = {
         'count':img_count,
@@ -29,20 +28,21 @@ def fetch_nasa_apod(api_key, img_count=30):
         if apod['media_type']=='image':
             ext = get_file_extension(apod['url'])
             img_name = f'image_apod_{i}{ext}'
-            fetch_image(apod['url'], img_name)
+            img_data = fetch_image(apod['url'])
+            save_image(img_name, img_data)
 
 
 def fetch_nasa_epic_image(api_key, img_name, date, index):
     formated_date = date.strftime('%Y/%m/%d') 
     url = f'https://api.nasa.gov/EPIC/archive/natural/{formated_date}/png/{img_name}.png'
-    base_path = './images/'
 
     payload = {
         'api_key':api_key
     }
 
     img_name = f'image_epic_{index}.png'
-    fetch_image(url, img_name, payload=payload)
+    img_data = fetch_image(url, img_name, payload=payload)
+    save_image(img_name, img_data)
 
 
 def fetch_nasa_epic_imgset(api_key):
