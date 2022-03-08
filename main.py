@@ -34,7 +34,7 @@ def main():
     telegram_token = os.getenv('TELEGRAM_BOT_TOKEN')
     channel_id = os.getenv('TELEGRAM_CHANNEL_ID')
     time_delay = os.getenv('TIME_DELAY_SECONDS')
-    if time_delay is None:
+    if not time_delay:
         time_delay = 86400
     bot = telegram.Bot(telegram_token)
 
