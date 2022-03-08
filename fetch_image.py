@@ -3,11 +3,11 @@ from pathlib import Path
 import requests
 
 
-def fetch_image(url, img_name, payload={}):
+def fetch_image(url, payload={}):
     response = requests.get(url, params=payload)
     response.raise_for_status()
 
-    save_image(img_name, response.content)
+    return response.content
 
 
 def save_image(img_name, bytes):
