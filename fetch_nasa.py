@@ -23,8 +23,8 @@ def fetch_nasa_apod(api_key, img_count=30):
     response = requests.get(apod_api, params=payload)
     response.raise_for_status()
 
-    apod_list = response.json()
-    for i, apod in enumerate(apod_list):
+    apods = response.json()
+    for i, apod in enumerate(apods):
         if apod['media_type']=='image':
             ext = get_file_extension(apod['url'])
             img_name = f'image_apod_{i}{ext}'
@@ -55,8 +55,8 @@ def fetch_nasa_epic_imgset(api_key):
     response = requests.get(url, params=payload)
     response.raise_for_status()
 
-    epic_list = response.json()
-    for i, epic in enumerate(epic_list):
+    epics = response.json()
+    for i, epic in enumerate(epics):
         img_name = epic['image']
         img_date = datetime.datetime.fromisoformat(epic['date'])
         fetch_nasa_epic_image(api_key, img_name, img_date, i)
