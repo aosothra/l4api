@@ -43,10 +43,15 @@ def main():
             fetch_bulk(nasa_api_key)
 
         img_path = f'./images/{get_random_img_name()}'
-        with open(img_path, 'rb') as img:
-            bot.send_photo(chat_id=channel_id, photo=img)
 
-        os.remove(img_path)
+        try:
+            with open(img_path, 'rb') as img:
+                bot.send_photo(chat_id=channel_id, photo=img)
+        except Exception as err:
+            print('Error occured while reading a file')
+            print(err)
+        finally:
+            os.remove(img_path)
 
         time.sleep(int(time_delay))
 
