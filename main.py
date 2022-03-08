@@ -11,8 +11,8 @@ from fetch_spacex import fetch_spacex_last_launch
 
 
 def get_random_img_name():
-    files = os.listdir('./images/')
-    return random.choice(files)
+    filepaths = os.listdir('./images/')
+    return random.choice(filepaths)
 
 
 def is_imgset_empty():
