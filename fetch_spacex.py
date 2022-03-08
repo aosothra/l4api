@@ -14,7 +14,7 @@ def fetch_spacex_last_launch():
 
     img_urls = response.json()['links']['flickr']['original']
 
-    for i, link in enumerate(img_urls):
+    for i, url in enumerate(img_urls):
         img_name = f'image_spacex_{i}.jpeg'
-        img_data = fetch_image(link)
+        img_data = fetch_image(url)
         save_image(img_name, img_data)
