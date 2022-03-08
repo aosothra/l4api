@@ -30,18 +30,6 @@ def fetch_bulk(api_key):
     fetch_nasa_epic_imgset(api_key)
 
 
-def publish_text(bot, channel, message):
-    bot.send_message(chat_id=channel, text=message)
-
-
-def publish_random_image(bot, channel):
-    img_path = f'./images/{get_random_img_name()}'
-
-    bot.send_photo(chat_id=channel, photo=open(img_path, 'rb'))
-
-    os.remove(img_path)
-
-
 def main():
     load_dotenv()
     nasa_api_key = os.getenv('NASA_API_KEY')
@@ -55,7 +43,12 @@ def main():
     while True:
         if imgset_is_empty():
             fetch_bulk(nasa_api_key)
-        publish_random_image(bot, channel_id)
+
+        img_path = f'./images/{get_random_img_name()}'
+        bot.send_photo(chat_id=channel_id, photo=open(img_path, 'rb'))
+
+        os.remove(img_path)
+
         time.sleep(int(time_delay))
 
 
