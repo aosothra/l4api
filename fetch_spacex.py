@@ -3,7 +3,7 @@ from pathlib import Path
 
 import requests
 
-import save_image
+from fetch_image import fetch_image
 
 
 def fetch_spacex_last_launch():
@@ -16,5 +16,5 @@ def fetch_spacex_last_launch():
     img_urls = response.json()['links']['flickr']['original']
 
     for i, link in enumerate(img_urls):
-        img_path = f'{base_path}image_spacex_{i}.jpeg'
-        save_image(link, img_path)
+        img_name = f'image_spacex_{i}.jpeg'
+        fetch_image(link, img_name)

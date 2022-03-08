@@ -4,7 +4,7 @@ from urllib.parse import urlsplit
 
 import requests
 
-import save_image
+from fetch_image import fetch_image
 
 
 def get_file_extension(url):
@@ -28,8 +28,8 @@ def fetch_nasa_apod(api_key, img_count=30):
     for i, apod in enumerate(apod_list):
         if apod['media_type']=='image':
             ext = get_file_extension(apod['url'])
-            img_path = f'{base_path}image_apod_{i}{ext}'
-            save_image(apod['url'], img_path)
+            img_name = f'image_apod_{i}{ext}'
+            fetch_image(apod['url'], img_name)
 
 
 def fetch_nasa_epic_image(api_key, img_name, date, index):
@@ -41,8 +41,8 @@ def fetch_nasa_epic_image(api_key, img_name, date, index):
         'api_key':api_key
     }
 
-    img_path = f'{base_path}image_epic_{index}.png'
-    save_image(url, img_path, payload=payload)
+    img_name = f'image_epic_{index}.png'
+    fetch_image(url, img_name, payload=payload)
 
 
 def fetch_nasa_epic_imgset(api_key):
