@@ -17,9 +17,9 @@ def get_random_img_name():
 
 def is_imgset_empty():
     if Path('./images/').exists():
-        return os.listdir('./images/')
+        return not os.listdir('./images/')
     else:
-        return False
+        return True
 
 
 def fetch_bulk(api_key):
@@ -43,7 +43,8 @@ def main():
             fetch_bulk(nasa_api_key)
 
         img_path = f'./images/{get_random_img_name()}'
-        bot.send_photo(chat_id=channel_id, photo=open(img_path, 'rb'))
+        with open(img_path, 'rb') as img:
+            bot.send_photo(chat_id=channel_id, photo=img)
 
         os.remove(img_path)
 
