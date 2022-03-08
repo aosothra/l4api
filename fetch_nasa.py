@@ -45,7 +45,7 @@ def fetch_nasa_epic_image(api_key, img_name, date, index):
     }
 
     img_name = f'image_epic_{index}.png'
-    img_data = fetch_image(url, img_name, payload=payload)
+    img_data = fetch_image(url, payload=payload)
     save_image(img_name, img_data)
 
 
