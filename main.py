@@ -15,11 +15,9 @@ def get_random_img_name():
     return random.choice(files)
 
 
-def imgset_is_empty():
-    if not Path('./images/').exists():
-        return True
-    elif not os.listdir('./images/'):
-        return True
+def is_imgset_empty():
+    if Path('./images/').exists():
+        return os.listdir('./images/')
     else:
         return False
 
@@ -41,7 +39,7 @@ def main():
     bot = telegram.Bot(telegram_token)
 
     while True:
-        if imgset_is_empty():
+        if is_imgset_empty():
             fetch_bulk(nasa_api_key)
 
         img_path = f'./images/{get_random_img_name()}'
