@@ -15,10 +15,6 @@ def get_random_img_name():
     return random.choice(filepaths)
 
 
-def is_imgset_empty():
-    return not os.listdir('./images/')
-
-
 def fetch_bulk(api_key):
     fetch_spacex_last_launch()
     fetch_nasa_apod(api_key)
@@ -36,7 +32,7 @@ def main():
     Path('./images/').mkdir(parents=True, exist_ok=True)
 
     while True:
-        if is_imgset_empty():
+        if not os.listdir('./images/'):
             fetch_bulk(nasa_api_key)
 
         img_path = f'./images/{get_random_img_name()}'
