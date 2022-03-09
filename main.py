@@ -33,9 +33,7 @@ def main():
     nasa_api_key = os.getenv('NASA_API_KEY')
     telegram_token = os.getenv('TELEGRAM_BOT_TOKEN')
     channel_id = os.getenv('TELEGRAM_CHANNEL_ID')
-    time_delay = os.getenv('TIME_DELAY_SECONDS')
-    if not time_delay:
-        time_delay = 86400
+    time_delay = os.getenv('TIME_DELAY_SECONDS', default='86400')
     bot = telegram.Bot(telegram_token)
 
     while True:
