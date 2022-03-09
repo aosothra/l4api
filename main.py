@@ -47,9 +47,6 @@ def main():
         try:
             with open(img_path, 'rb') as img:
                 bot.send_photo(chat_id=channel_id, photo=img)
-        except Exception as err:
-            print('Error occured while reading a file')
-            print(err)
         finally:
             os.remove(img_path)
 
