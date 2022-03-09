@@ -16,10 +16,7 @@ def get_random_img_name():
 
 
 def is_imgset_empty():
-    if Path('./images/').exists():
-        return not os.listdir('./images/')
-    else:
-        return True
+    return not os.listdir('./images/')
 
 
 def fetch_bulk(api_key):
@@ -35,6 +32,8 @@ def main():
     channel_id = os.getenv('TELEGRAM_CHANNEL_ID')
     time_delay = os.getenv('TIME_DELAY_SECONDS', default='86400')
     bot = telegram.Bot(telegram_token)
+
+    Path('./images/').mkdir(parents=True, exist_ok=True)
 
     while True:
         if is_imgset_empty():
